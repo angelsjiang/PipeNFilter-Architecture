@@ -159,16 +159,13 @@ public class SinkFilter extends FilterFramework
 
 					if (id == 2)   // this will be altitude measurement
 					{
-						System.out.print("Altitude = " + Double.longBitsToDouble(measurement) + ",");
 						double altitude = Double.longBitsToDouble(measurement);
 
 						if(altitude < 0) {
 							data = Double.longBitsToDouble(measurement) + "*,";
 						}
-						else {
-							data = Double.longBitsToDouble(measurement) + ",";
 
-						}
+						System.out.print("Altitude = " + data);
 
 						fw.write(data);
 					}
