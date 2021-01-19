@@ -2,7 +2,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 
 /******************************************************************************************************************
 * File:MiddleFilter.java
@@ -39,13 +38,13 @@ public class MiddleFilter extends FilterFramework
 		double prev = 0;
 		double prevPrev = 0;
 		boolean wildJump;
-		ArrayList<String> sb;
 
 		int IdLength = 4;				// This is the length of IDs in the byte stream
 		int id;
 		int i;
 
 		FileWriter fw;
+
 		// Next we write a message to the terminal to let the world know we are alive...
 
 		System.out.print( "\n" + this.getName() + "::Middle Reading ");
@@ -72,7 +71,6 @@ public class MiddleFilter extends FilterFramework
 
 
 				try {
-
 
 					// set up this to grab id = 2
 					id = 0;
@@ -216,10 +214,13 @@ public class MiddleFilter extends FilterFramework
 						if(wildJump) {
 
 							fw.write(wildPointsData);
-							wildPointsData = "";
-							wildJump = false;
+							fw.flush();
 
 						}
+
+						wildPointsData = "";
+						wildJump = false;
+
 
 					}
 
