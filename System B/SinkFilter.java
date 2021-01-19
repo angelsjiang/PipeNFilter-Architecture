@@ -62,9 +62,16 @@ public class SinkFilter extends FilterFramework
 		FileWriter fw;
 
 		try {
-			fw = new FileWriter("./OutputA.csv", true);
+			fw = new FileWriter("./OutputB.csv", true);
 
-				while (true)
+			fw.write("Time,");
+			fw.write("Velocity,");
+			fw.write("Altitude,");
+			fw.write("Pressure,");
+			fw.write("Temperature, \n");
+
+
+			while (true)
 			{
 				try
 				{
@@ -72,7 +79,6 @@ public class SinkFilter extends FilterFramework
 					// We know that the first data coming to this filter is going to be an ID and
 					// that it is IdLength long. So we first decommutate the ID bytes.
 					****************************************************************************/
-
 
 					id = 0;
 
@@ -135,7 +141,7 @@ public class SinkFilter extends FilterFramework
 					if ( id == 0 ) // time
 					{
 	//					TimeStamp.setTimeInMillis(measurement);
-						System.out.print("Time = " + TimeStampFormat.format(measurement));
+//						System.out.print("Time = " + TimeStampFormat.format(measurement));
 						data = TimeStampFormat.format(measurement) + ",";
 						fw.write(data);
 					} // if
@@ -152,7 +158,7 @@ public class SinkFilter extends FilterFramework
 
 					if ( id == 1)   // this will be velocity measurement
 					{
-						System.out.print("Velocity = " + Double.longBitsToDouble(measurement) + ",");
+//						System.out.print("Velocity = " + Double.longBitsToDouble(measurement) + ",");
 						data = Double.longBitsToDouble(measurement) + ",";
 						fw.write(data);
 					}
@@ -160,26 +166,26 @@ public class SinkFilter extends FilterFramework
 					if (id == 2)   // this will be altitude measurement
 					{
 						double altitude = Double.longBitsToDouble(measurement);
-
+//						System.out.println("Altitude:::: " + altitude);
 						if(altitude < 0) {
-							data = Double.longBitsToDouble(measurement) + "*,";
+							altitude = Math.abs(altitude);
 						}
-
-						System.out.print("Altitude = " + data);
+						data = altitude + "*,";
+//						System.out.print("Altitude = " + data);
 
 						fw.write(data);
 					}
 
 					if (id == 3)   // this will be pressure measurement
 					{
-						System.out.print("Pressure = " + Double.longBitsToDouble(measurement) + ",");
+//						System.out.print("Pressure = " + Double.longBitsToDouble(measurement) + ",");
 						data = Double.longBitsToDouble(measurement) + ",";
 						fw.write(data);
 					}
 
 					if ( id == 4 )   // temperature
 					{
-						System.out.print("Temperature = " + Double.longBitsToDouble(measurement));
+//						System.out.print("Temperature = " + Double.longBitsToDouble(measurement));
 						data = Double.longBitsToDouble(measurement) + ", \n";
 						fw.write(data);
 	//					System.out.print( TimeStampFormat.format(TimeStamp.getTime()) + " ID = " + id + ", Temperature = " + Double.longBitsToDouble(measurement));
