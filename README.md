@@ -1,16 +1,18 @@
 # PipeNFilter-Architecture
 
+Systems Overlook:
 
     -------------------------->  Architecture of System A <-----------------------------
 
     [ SourceFilter ] ---> [ MiddleFilter ]  --->  [ SinkFilter ]
 
     
-    Go to System A directory
-    To Compile:
-        javac *.java
-    To Run:
-        java Plumber
+    Running Instructions:
+        Go to System A directory
+        To Compile:
+            javac *.java
+        To Run:
+            java Plumber
 
 
     -------------------------->  Architecture of System B <-----------------------------
@@ -25,12 +27,13 @@
                                 |                       |
                         WildPoint.csv               OutputB.csv
 
-    Go to System B directory
-    To Compile:
-        javac *.java
-    To Run:
-        java Plumber
-        
+    Running Instructions:
+        Go to System B directory
+        To Compile:
+            javac *.java
+        To Run:
+            java Plumber
+            
 
     -------------------------->  Architecture of System C <-----------------------------
 
@@ -51,9 +54,18 @@
                                                          |                       |
                                                 WildPressureData.csv     WildPitchPressureData.csv
 
+    Running Instructions:
+        Go to System C directory
+        To Compile:
+            javac *.java
+        To Run:
+            java Plumber
 
-    Go to System C directory
-    To Compile:
-        javac *.java
-    To Run:
-        java Plumber
+
+    -------------------------->  End of Systems Overlook <-----------------------------
+
+Note:
+    - All the data files are hardcoded in the program. To change test input files, please go to:
+        System A -> SourceFilter.java -> line 26
+        System B ->  SourceFilter.java -> line 26
+        System B -> SourceMergeFilter.java -> line 31 & 32
