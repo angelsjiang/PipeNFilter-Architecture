@@ -52,7 +52,7 @@
                                                 WildPressureData.csv     WildPitchPressureData.csv
 
 
-    Go to System B directory
+    Go to System C directory
     To Compile:
         javac *.java
     To Run:
