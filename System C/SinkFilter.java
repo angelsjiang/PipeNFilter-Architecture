@@ -62,7 +62,7 @@ public class SinkFilter extends FilterFramework
 		FileWriter fw;
 
 		try {
-			fw = new FileWriter("./OutputC.csv", true);
+			fw = new FileWriter("./Outputs/OutputC.csv", true);
 			int negativeCount = 0;
 
 			fw.write("Time,");

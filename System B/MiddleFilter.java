@@ -52,7 +52,7 @@ public class MiddleFilter extends FilterFramework
 
 		try {
 
-			fw = new FileWriter("./WildPoint.csv", true);
+			fw = new FileWriter("./Outputs/WildPoint.csv", true);
 
 			fw.write("Time,");
 			fw.write("Velocity,");

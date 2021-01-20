@@ -51,7 +51,7 @@ public class WildPressureFilter extends FilterFramework{
 
         try {
 
-            fw = new FileWriter("./WildPressureData.csv", true);
+            fw = new FileWriter("./Outputs//WildPressureData.csv", true);
 
             fw.write("Time,");
             fw.write("Velocity,");

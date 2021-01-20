@@ -65,7 +65,10 @@ Systems Overlook:
     -------------------------->  End of Systems Overlook <-----------------------------
 
 Note:
-    - All the data files are hardcoded in the program. To change test input files, please go to:
-        System A -> SourceFilter.java -> line 26
-        System B ->  SourceFilter.java -> line 26
-        System B -> SourceMergeFilter.java -> line 31 & 32
+
+        - All the data files are hardcoded in the program. To change test input files, please go to:
+            System A -> SourceFilter.java -> line 26
+            System B ->  SourceFilter.java -> line 26
+            System B -> SourceMergeFilter.java -> line 31 & 32
+
+        - All outputs will be generated into "Outputs" directory under each system's directory

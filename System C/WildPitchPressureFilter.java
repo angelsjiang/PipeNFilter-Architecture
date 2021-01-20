@@ -52,7 +52,7 @@ public class WildPitchPressureFilter extends FilterFramework{
 
         try {
 
-            fw = new FileWriter("./WildPitchPressureData.csv", true);
+            fw = new FileWriter("./Outputs/WildPitchPressureData.csv", true);
 
             fw.write("Time,");
             fw.write("Velocity,");
