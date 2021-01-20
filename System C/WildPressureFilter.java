@@ -51,17 +51,14 @@ public class WildPressureFilter extends FilterFramework{
 
         try {
 
-            int countingWild = 0;
-            int countingInWrite = 0;
-
             fw = new FileWriter("./WildPressureData.csv", true);
 
             fw.write("Time,");
             fw.write("Velocity,");
             fw.write("Altitude,");
             fw.write("Pressure,");
-            fw.write("Temperature,");
-            fw.write("Pitch, \n");
+            fw.write("Temperature,\n");
+//            fw.write("Pitch, \n");
 
             String wildPointsData = "";
             wildJump = false; // default this value to false;
@@ -117,7 +114,6 @@ public class WildPressureFilter extends FilterFramework{
                     if (id == 0) // time
                     {
                         String value = TimeStampFormat.format(measurement) + ",";
-//                        System.out.println("Time : " + value);
                         wildPointsData += value;
 
                     } // if
@@ -126,8 +122,6 @@ public class WildPressureFilter extends FilterFramework{
                     if (id == 1)   // this will be velocity measurement
                     {
                         String value = Double.longBitsToDouble(measurement) + ",";
-//                        System.out.println("Velocity : " + value);
-
                         wildPointsData += value;
                     }
 
@@ -136,8 +130,6 @@ public class WildPressureFilter extends FilterFramework{
                     {
 
                         String value = Double.longBitsToDouble(measurement) + ",";
-//                        System.out.println("Altitude : " + value);
-
                         wildPointsData += value;
 
                     }
@@ -147,7 +139,6 @@ public class WildPressureFilter extends FilterFramework{
                     {
 
                         data = Double.longBitsToDouble(ByteBuffer.wrap(byteArr2).getLong());
-//                        System.out.println("Pressure : " + data + ",");
                         String value = data + ",";
                         wildPointsData += value;
 
@@ -155,7 +146,6 @@ public class WildPressureFilter extends FilterFramework{
 
                             // change the wildJump value to true, so it will notify the printer to print
                             wildJump = true;
-                            countingWild++;
                         }
 
                         // if there is a wildJump, then need to modify output data
@@ -195,17 +185,8 @@ public class WildPressureFilter extends FilterFramework{
 
                     if (id == 4)   // this will be Temperature measurement
                     {
-                        String value = Double.longBitsToDouble(measurement) + ",";
-//                        System.out.println("Temperature : " + value);
-
-                        wildPointsData += value;
-
-                    }
-
-                    if (id == 5)    // this will be pitch measurement
-                    {
                         String value = Double.longBitsToDouble(measurement) + ",\n";
-//                        System.out.println("Pitch : " + value);
+//                        System.out.println("Temperature : " + value);
 
                         wildPointsData += value;
 
@@ -213,7 +194,6 @@ public class WildPressureFilter extends FilterFramework{
 
                             fw.write(wildPointsData);
                             fw.flush();
-                            countingInWrite++;
 
                         }
 
@@ -221,6 +201,15 @@ public class WildPressureFilter extends FilterFramework{
                         wildJump = false;
 
                     }
+
+//                    if (id == 5)    // this will be pitch measurement
+//                    {
+//                        String value = Double.longBitsToDouble(measurement) + ",\n";
+////                        System.out.println("Pitch : " + value);
+//
+//                        wildPointsData += value;
+//
+//                    }
 
 
                     for (int j = 0; j < byteArr.length; j++) {
@@ -255,15 +244,6 @@ public class WildPressureFilter extends FilterFramework{
                 }
 
             } // while
-//
-//            System.out.println(" :::::::::::::::           ::::::::::::::::");
-//            System.out.println("Counting wild = " + countingWild);
-//            System.out.println(" :::::::::::::::           ::::::::::::::::");
-//
-//            System.out.println(" :::::::::::::::           ::::::::::::::::");
-//            System.out.println("Counting in Write = " + countingInWrite);
-//            System.out.println(" :::::::::::::::           ::::::::::::::::");
-//
 
         } // try
 

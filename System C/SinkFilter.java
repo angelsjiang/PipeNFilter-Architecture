@@ -196,29 +196,29 @@ public class SinkFilter extends FilterFramework
 					if ( id == 4 )   // temperature
 					{
 						System.out.print("Temperature = " + Double.longBitsToDouble(measurement) + "\n");
-						data = Double.longBitsToDouble(measurement) + ",";
+						data = Double.longBitsToDouble(measurement) + ",\n";
 						fw.write(data);
 						fw.flush();
 
 
 					} // if
 
-					if ( Math.abs(id) == 5 )   // pitch
-					{
-						System.out.print("Pitch = " + Double.longBitsToDouble(measurement) + "\n");
-						double pitch = Double.longBitsToDouble(measurement);
-						if(id == -5) {
-							data = pitch + "*, \n";
-							negativeCount++;
-						}
-						else {
-							data = pitch + ", \n";
-						}
-						fw.write(data);
-						fw.flush();
-
-
-					} // if
+//					if ( Math.abs(id) == 5 )   // pitch
+//					{
+//						System.out.print("Pitch = " + Double.longBitsToDouble(measurement) + "\n");
+//						double pitch = Double.longBitsToDouble(measurement);
+//						if(id == -5) {
+//							data = pitch + "*, \n";
+//							negativeCount++;
+//						}
+//						else {
+//							data = pitch + ", \n";
+//						}
+//						fw.write(data);
+//						fw.flush();
+//
+//
+//					} // if
 
 
 					System.out.print( "\n" );

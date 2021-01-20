@@ -58,8 +58,8 @@ public class WildPitchPressureFilter extends FilterFramework{
             fw.write("Velocity,");
             fw.write("Altitude,");
             fw.write("Pressure,");
-            fw.write("Temperature,");
-            fw.write("Pitch, \n");
+            fw.write("Temperature,\n");
+//            fw.write("Pitch, \n");
 
             String wildPointsData = "";
             pressureWildJump = false; // default this value to false;
@@ -193,7 +193,7 @@ public class WildPitchPressureFilter extends FilterFramework{
 
                     if (id == 4)   // this will be Temperature measurement
                     {
-                        String value = Double.longBitsToDouble(measurement) + ",";
+                        String value = Double.longBitsToDouble(measurement) + ",\n";
 //                        System.out.println("Temperature : " + value);
 
                         wildPointsData += value;
@@ -203,10 +203,10 @@ public class WildPitchPressureFilter extends FilterFramework{
                     if (id == 5)    // this will be pitch measurement, will modify id instead of data itself
                     {
                         data = Double.longBitsToDouble(ByteBuffer.wrap(byteArr2).getLong());
-                        String value = data + ",\n";
+//                        String value = data + ",\n";
 //                        System.out.println("Pitch : " + value);
 
-                        wildPointsData += value;
+//                        wildPointsData += value;
 
                         if (data > 10) {
 
@@ -296,15 +296,6 @@ public class WildPitchPressureFilter extends FilterFramework{
                 }
 
             } // while
-//
-//            System.out.println(" :::::::::::::::           ::::::::::::::::");
-//            System.out.println("Counting wild = " + countingWild);
-//            System.out.println(" :::::::::::::::           ::::::::::::::::");
-//
-//            System.out.println(" :::::::::::::::           ::::::::::::::::");
-//            System.out.println("Counting in Write = " + countingInWrite);
-//            System.out.println(" :::::::::::::::           ::::::::::::::::");
-//
 
         } // try
 

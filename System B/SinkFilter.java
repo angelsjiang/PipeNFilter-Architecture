@@ -70,6 +70,8 @@ public class SinkFilter extends FilterFramework
 			fw.write("Pressure,");
 			fw.write("Temperature, \n");
 
+			fw.flush();
+
 
 			while (true)
 			{
@@ -144,6 +146,8 @@ public class SinkFilter extends FilterFramework
 //						System.out.print("Time = " + TimeStampFormat.format(measurement));
 						data = TimeStampFormat.format(measurement) + ",";
 						fw.write(data);
+						fw.flush();
+
 					} // if
 
 					/****************************************************************************
@@ -161,6 +165,8 @@ public class SinkFilter extends FilterFramework
 //						System.out.print("Velocity = " + Double.longBitsToDouble(measurement) + ",");
 						data = Double.longBitsToDouble(measurement) + ",";
 						fw.write(data);
+						fw.flush();
+
 					}
 
 					if (id == 2)   // this will be altitude measurement
@@ -174,6 +180,8 @@ public class SinkFilter extends FilterFramework
 //						System.out.print("Altitude = " + data);
 
 						fw.write(data);
+						fw.flush();
+
 					}
 
 					if (id == 3)   // this will be pressure measurement
@@ -181,6 +189,8 @@ public class SinkFilter extends FilterFramework
 //						System.out.print("Pressure = " + Double.longBitsToDouble(measurement) + ",");
 						data = Double.longBitsToDouble(measurement) + ",";
 						fw.write(data);
+						fw.flush();
+
 					}
 
 					if ( id == 4 )   // temperature
@@ -188,7 +198,9 @@ public class SinkFilter extends FilterFramework
 //						System.out.print("Temperature = " + Double.longBitsToDouble(measurement));
 						data = Double.longBitsToDouble(measurement) + ", \n";
 						fw.write(data);
-	//					System.out.print( TimeStampFormat.format(TimeStamp.getTime()) + " ID = " + id + ", Temperature = " + Double.longBitsToDouble(measurement));
+						fw.flush();
+
+						//					System.out.print( TimeStampFormat.format(TimeStamp.getTime()) + " ID = " + id + ", Temperature = " + Double.longBitsToDouble(measurement));
 
 					} // if
 
