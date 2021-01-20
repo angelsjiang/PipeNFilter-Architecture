@@ -1,10 +1,33 @@
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.text.SimpleDateFormat;
+
+/******************************************************************************************************************
+ * File:MiddleFilter.java
+ * Project: Assignment 1
+ * Copyright: Copyright (c) 2003 Carnegie Mellon University
+ * Versions:
+ *	1.0 November 2008 - Sample Pipe and Filter code (ajl).
+ *
+ * Description:
+ *
+ * This class serves as an example for how to use the FilterRemplate to create a standard filter. This particular
+ * example is a simple "pass-through" filter that reads data from the filter's input port and writes data out the
+ * filter's output port.
+ *
+ * Parameters: 		None
+ *
+ * Internal Methods: None
+ *
+ ******************************************************************************************************************/
+
 
 public class WildPitchPressureFilter extends FilterFramework{
 
     public void run() {
+
+        SimpleDateFormat TimeStampFormat = new SimpleDateFormat("YYYY:DD:HH:MM:SS");
 
         int bytesread = 0;					// Number of bytes read from the input file.
         int byteswritten = 0;				// Number of bytes written to the stream.
@@ -13,11 +36,10 @@ public class WildPitchPressureFilter extends FilterFramework{
         int MeasurementLength = 8;		// This is the length of all measurements (including time) in bytes
         long measurement;
         double data;
-        double prevPitch = 0;
-        double prevPress = 0;
-        double prevPrevPitch = 0;
-        double prevPrevPress = 0;
-        boolean wildJump;
+        double prev = 0;
+        double prevPrev = 0;
+        boolean pressureWildJump;
+        boolean pitchWildJump;
 
         int IdLength = 4;				// This is the length of IDs in the byte stream
         int id;
@@ -26,132 +48,271 @@ public class WildPitchPressureFilter extends FilterFramework{
         FileWriter fw;
         // Next we write a message to the terminal to let the world know we are alive...
 
-        System.out.print( "\n" + this.getName() + "::Middle Reading ");
+        System.out.print( "\n" + this.getName() + "::WilPressureFilter Reading ");
 
-        while (true)
-        {
-            /*************************************************************
-             *	Here we read a byte and write a byte
-             *************************************************************/
+        try {
 
-            try
-            {
-//				databyte = ReadFilterInputPort();	// This is where we read the byte from the stream...
+            fw = new FileWriter("./WildPitchPressureData.csv", true);
 
-                fw = new FileWriter("./WildPitchPressurePoint.csv", true);
+            fw.write("Time,");
+            fw.write("Velocity,");
+            fw.write("Altitude,");
+            fw.write("Pressure,");
+            fw.write("Temperature,");
+            fw.write("Pitch, \n");
 
-                // set up this to grab id = 2
-                id = 0;
-                byte[] byteArr = new byte[IdLength];
-                for (i=0; i<IdLength; i++ )
-                {
-                    databyte = ReadFilterInputPort();	// This is where we read the byte from the stream...
-                    byteArr[i] = databyte;
-                    id = id | (databyte & 0xFF);		// We append the byte on to ID...
+            String wildPointsData = "";
+            pressureWildJump = false; // default this value to false;
+            pitchWildJump = false;
 
-                    if (i != IdLength-1)				// If this is not the last byte, then slide the
-                    {									// previously appended byte to the left by one byte
-                        id = id << 8;					// to make room for the next byte we append to the ID
+
+            while (true) {
+                /*************************************************************
+                 *	Here we read a byte and write a byte
+                 *************************************************************/
+
+
+                try {
+
+                    // set up this to grab id = 2
+                    id = 0;
+                    byte[] byteArr = new byte[IdLength];
+                    for (i = 0; i < IdLength; i++) {
+                        databyte = ReadFilterInputPort();    // This is where we read the byte from the stream...
+                        byteArr[i] = databyte;
+                        id = id | (databyte & 0xFF);        // We append the byte on to ID...
+
+                        if (i != IdLength - 1)                // If this is not the last byte, then slide the
+                        {                                    // previously appended byte to the left by one byte
+                            id = id << 8;                    // to make room for the next byte we append to the ID
+
+                        } // if
+
+                        bytesread++;                        // Increment the byte count
+
+                    } // for
+
+
+                    // set up to grab Altitude measurement
+                    measurement = 0;
+                    byte[] byteArr2 = new byte[MeasurementLength];
+                    for (i = 0; i < MeasurementLength; i++) {
+                        databyte = ReadFilterInputPort();
+                        byteArr2[i] = databyte;
+
+                        measurement = measurement | (databyte & 0xFF);    // We append the byte on to measurement...
+
+                        if (i != MeasurementLength - 1)                    // If this is not the last byte, then slide the
+                        {                                                // previously appended byte to the left by one byte
+                            measurement = measurement << 8;                // to make room for the next byte we append to the
+                            // measurement
+                        } // if
+
+                        bytesread++;                        // Increment the byte count
 
                     } // if
 
-                    bytesread++;						// Increment the byte count
 
-                } // for
+                    if (id == 0) // time
+                    {
+                        String value = TimeStampFormat.format(measurement) + ",";
+//                        System.out.println("Time : " + value);
+                        wildPointsData += value;
 
-                // pass the stored byte values to the next filter
-                for(int j = 0; j < byteArr.length; j++) {
-                    WriteFilterOutputPort(byteArr[j]);
-                }
-
-
-                measurement = 0;
-                byte[] byteArr2 = new byte[MeasurementLength];
-                for (i=0; i<MeasurementLength; i++ )
-                {
-                    databyte = ReadFilterInputPort();
-                    byteArr2[i] = databyte;
-
-                    bytesread++;									// Increment the byte count
-
-                } // if
+                    } // if
 
 
-                wildJump = false; // default this value to false;
-                data = 0; // reset data variable
+                    if (id == 1)   // this will be velocity measurement
+                    {
+                        String value = Double.longBitsToDouble(measurement) + ",";
+//                        System.out.println("Velocity : " + value);
 
-                if (id == 3)   // this will be pressure measurement
-                {
-
-                    data = ByteBuffer.wrap(byteArr2).getDouble();
-                    System.out.println("Pressure = " + data);
-
-                    // and compare with prev data
-                    if(data < 45 || data > 90) {
-
-                        System.out.println("Wild jump data: " + data);
-                        fw.write(data + ",\n");
-                        fw.flush();
-
-                        wildJump = true;
+                        wildPointsData += value;
                     }
 
-                    // pass down to store the values as prevPrev and prev
-                    prevPrevPress = prevPress;
-                    prevPress = data;
 
-                    // if there is a wildJump, then need to modify output data
-                    if(wildJump) {
+                    if (id == 2)   // this will be altitude measurement
+                    {
 
-                        // get the average of the previous 2 altitudes
-                        // if prePrev == 0, which means it's the 2nd frame
+                        String value = Double.longBitsToDouble(measurement) + ",";
+//                        System.out.println("Altitude : " + value);
 
-                        if(prevPrevPress == 0) {
-
-                            // then set data to the prev data
-                            data = prevPress;
-                        }
-                        else {
-
-                            // else take the average of the previous 2 altitudes
-                            data = (prevPrevPress + prevPress) / 2.00000;
-                        }
-
-                        // convert data back to byte array
-                        data = (-1) * data;
+                        wildPointsData += value;
 
                     }
 
-                    byteArr2 = ByteBuffer.allocate(8).putDouble(data).array();
 
+                    if (id == 3)   // this will be Pressure measurement
+                    {
+
+                        data = Double.longBitsToDouble(ByteBuffer.wrap(byteArr2).getLong());
+//                        System.out.println("Pressure : " + data + ",");
+                        String value = data + ",";
+                        wildPointsData += value;
+
+                        if (data > 65) {
+
+                            // change the wildJump value to true, so it will notify the printer to print
+                            pressureWildJump = true;
+                        }
+
+                        // if there is a wildJump, then need to modify output data
+                        if (pressureWildJump) {
+
+                            // get the average of the previous 2 altitudes
+                            // if prePrev == 0, which means it's the 2nd frame
+
+                            // second frame
+                            if (prevPrev == 0 && prev != 0) {
+
+                                // then set data to the prev data
+                                data = prev;
+                            }
+
+                            // all the following frames
+                            else if (prevPrev != 0 && prev != 0) {
+
+                                // else take the average of the previous 2 altitudes
+                                data = (prevPrev + prev) / 2.00000;
+                            }
+
+
+                            // convert data back to byte array
+                            data = (-1) * data;
+
+                        }
+
+                        // pass down to store the values as prevPrev and prev
+                        prevPrev = prev;
+                        prev = Math.abs(data);
+
+                        byteArr2 = ByteBuffer.allocate(8).putLong(Double.doubleToLongBits(data)).array();
+
+                    }
+
+
+                    if (id == 4)   // this will be Temperature measurement
+                    {
+                        String value = Double.longBitsToDouble(measurement) + ",";
+//                        System.out.println("Temperature : " + value);
+
+                        wildPointsData += value;
+
+                    }
+
+                    if (id == 5)    // this will be pitch measurement, will modify id instead of data itself
+                    {
+                        data = Double.longBitsToDouble(ByteBuffer.wrap(byteArr2).getLong());
+                        String value = data + ",\n";
+//                        System.out.println("Pitch : " + value);
+
+                        wildPointsData += value;
+
+                        if (data > 10) {
+
+                            // change the wildJump value to true, so it will notify the printer to print
+                            pitchWildJump = true;
+                        }
+
+                        // if there is a wildJump, then need to modify output data
+                        if (pitchWildJump) {
+
+                            // get the average of the previous 2 altitudes
+                            // if prePrev == 0, which means it's the 2nd frame
+
+                            // second frame
+                            if (prevPrev == 0 && prev != 0) {
+
+                                // then set data to the prev data
+                                data = prev;
+                            }
+
+                            // all the following frames
+                            else if (prevPrev != 0 && prev != 0) {
+
+                                // else take the average of the previous 2 altitudes
+                                data = (prevPrev + prev) / 2.00000;
+                            }
+
+
+                            // convert data back to byte array
+                            id = (-1) * id;
+
+                        }
+
+                        // pass down to store the values as prevPrev and prev
+                        prevPrev = prev;
+                        prev = Math.abs(data);
+
+                        byteArr = ByteBuffer.allocate(4).putInt(id).array();
+
+                        byteArr2 = ByteBuffer.allocate(8).putLong(Double.doubleToLongBits(data)).array();
+
+
+
+                        if(pressureWildJump && pitchWildJump) {
+
+                            fw.write(wildPointsData);
+                            fw.flush();
+
+                        }
+
+                        wildPointsData = "";
+                        pressureWildJump = false;
+                        pitchWildJump = false;
+
+                    }
+
+
+                    for (int j = 0; j < byteArr.length; j++) {
+
+                        WriteFilterOutputPort(byteArr[j]);
+                        byteswritten++;
+
+                    }
+
+
+                    for (int j = 0; j < byteArr2.length; j++) {
+
+                        WriteFilterOutputPort(byteArr2[j]);
+                        byteswritten++;
+
+                    }
+
+                } // try
+
+                catch (EndOfStreamException e) {
+                    ClosePorts();
+                    System.out.print("\n" + this.getName() + "::Middle Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten);
+                    break;
+
+                } // catch
+
+                catch (IOException e) {
+                    ClosePorts();
+                    e.printStackTrace();
+                    System.out.println("\n" + this.getName() + "::Middle Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten);
+                    break;
                 }
 
-                for(int j = 0; j < byteArr2.length; j++) {
-                    WriteFilterOutputPort(byteArr2[j]);
-                }
+            } // while
+//
+//            System.out.println(" :::::::::::::::           ::::::::::::::::");
+//            System.out.println("Counting wild = " + countingWild);
+//            System.out.println(" :::::::::::::::           ::::::::::::::::");
+//
+//            System.out.println(" :::::::::::::::           ::::::::::::::::");
+//            System.out.println("Counting in Write = " + countingInWrite);
+//            System.out.println(" :::::::::::::::           ::::::::::::::::");
+//
 
-//				WriteFilterOutputPort(databyte);
-                byteswritten++;
+        } // try
 
-            } // try
+        catch (Exception e) {
 
-            catch (EndOfStreamException e)
-            {
-                ClosePorts();
-                System.out.print( "\n" + this.getName() + "::Middle Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
-                break;
+            e.printStackTrace();
 
-            } // catch
-
-            catch (IOException e) {
-                ClosePorts();
-                e.printStackTrace();
-                System.out.print( "\n" + this.getName() + "::Middle Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
-                break;
-            }
-
-        } // while
-
+        } // catch
 
     }
 }

@@ -63,9 +63,18 @@ public class SinkFilter extends FilterFramework
 
 		try {
 			fw = new FileWriter("./OutputC.csv", true);
-			int count = 0;
+			int negativeCount = 0;
 
-				while (true)
+			fw.write("Time,");
+			fw.write("Velocity,");
+			fw.write("Altitude,");
+			fw.write("Pressure,");
+			fw.write("Temperature, \n");
+
+			fw.flush();
+
+
+			while (true)
 			{
 				try
 				{
@@ -135,9 +144,10 @@ public class SinkFilter extends FilterFramework
 
 					if ( id == 0 ) // time
 					{
-//						System.out.print("Time = " + TimeStampFormat.format(measurement));
+						System.out.print("Time = " + TimeStampFormat.format(measurement) + "\n");
 						data = TimeStampFormat.format(measurement) + ",";
 						fw.write(data);
+						fw.flush();
 					} // if
 
 					/****************************************************************************
@@ -152,51 +162,66 @@ public class SinkFilter extends FilterFramework
 
 					if ( id == 1)   // this will be velocity measurement
 					{
-//						System.out.print("Velocity = " + Double.longBitsToDouble(measurement) + ",");
+						System.out.print("Velocity = " + Double.longBitsToDouble(measurement) + ",\n");
 						data = Double.longBitsToDouble(measurement) + ",";
 						fw.write(data);
+						fw.flush();
+
 					}
 
 					if (id == 2)   // this will be altitude measurement
 					{
 						data = Double.longBitsToDouble(measurement) + ",";
-//						System.out.print("Altitude = " + data);
+						System.out.print("Altitude = " + data + "\n");
 						fw.write(data);
+						fw.flush();
+
 					}
 
 					if (id == 3)   // this will be pressure measurement
 					{
-//						System.out.print("Pressure = " + Double.longBitsToDouble(measurement) + ",");
+						System.out.print("Pressure = " + Double.longBitsToDouble(measurement) + ",\n");
 						double pressure = Double.longBitsToDouble(measurement);
 						if(pressure < 0) {
 							data = Math.abs(Double.longBitsToDouble(measurement)) + "*,";
-							count++;
 						}
 						else {
 							data = Double.longBitsToDouble(measurement) + ",";
 						}
 						fw.write(data);
+						fw.flush();
+
 					}
 
 					if ( id == 4 )   // temperature
 					{
-//						System.out.print("Temperature = " + Double.longBitsToDouble(measurement));
+						System.out.print("Temperature = " + Double.longBitsToDouble(measurement) + "\n");
 						data = Double.longBitsToDouble(measurement) + ",";
 						fw.write(data);
-	//					System.out.print( TimeStampFormat.format(TimeStamp.getTime()) + " ID = " + id + ", Temperature = " + Double.longBitsToDouble(measurement));
+						fw.flush();
+
 
 					} // if
 
-					if ( id == 5 )   // pitch
+					if ( Math.abs(id) == 5 )   // pitch
 					{
-//						System.out.print("Pitch = " + Double.longBitsToDouble(measurement));
-						data = Double.longBitsToDouble(measurement) + ", \n";
+						System.out.print("Pitch = " + Double.longBitsToDouble(measurement) + "\n");
+						double pitch = Double.longBitsToDouble(measurement);
+						if(id == -5) {
+							data = pitch + "*, \n";
+							negativeCount++;
+						}
+						else {
+							data = pitch + ", \n";
+						}
 						fw.write(data);
+						fw.flush();
+
 
 					} // if
 
 
-//					System.out.print( "\n" );
+					System.out.print( "\n" );
 
 
 				} // try
@@ -215,10 +240,12 @@ public class SinkFilter extends FilterFramework
 
 				} // catch
 
-				System.out.println("Count for Wild pressure point are  = " + count);
 			} // while
 
 			fw.close(); // close FileWriter
+			System.out.println("::::::::: ::::::::");
+			System.out.println("Negative Count = " + negativeCount);
+			System.out.println("::::::::: ::::::::");
 
 		} catch (IOException e) {
 

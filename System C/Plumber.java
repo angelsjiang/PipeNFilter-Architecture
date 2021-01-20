@@ -26,8 +26,9 @@ public class Plumber
 		****************************************************************************/
 
 		SourceMergeFilter Filter1 = new SourceMergeFilter();
+//	   SourceFilterA Filter1 = new SourceFilterA();
 		WildPressureFilter Filter2 = new WildPressureFilter();
-//		WildPitchPressureFilter Filter3 = new WildPitchPressureFilter();
+		WildPitchPressureFilter Filter3 = new WildPitchPressureFilter();
 		SinkFilter Filter4 = new SinkFilter();
 
 		/****************************************************************************
@@ -36,8 +37,8 @@ public class Plumber
 		* source filter (Filter3).
 		****************************************************************************/
 
-//		Filter4.Connect(Filter3); // This esstially says, "connect Filter3 input port to Filter2 output port
-		Filter4.Connect(Filter2); // This esstially says, "connect Filter3 input port to Filter2 output port
+		Filter4.Connect(Filter3); // This esstially says, "connect Filter3 input port to Filter2 output port
+		Filter3.Connect(Filter2); // This esstially says, "connect Filter3 input port to Filter2 output port
 		Filter2.Connect(Filter1); // This esstially says, "connect Filter2 intput port to Filter1 output port
 
 		/****************************************************************************
@@ -46,7 +47,7 @@ public class Plumber
 
 	    Filter1.start();
 	    Filter2.start();
-//		Filter3.start();
+		Filter3.start();
 		Filter4.start();
 
    } // main

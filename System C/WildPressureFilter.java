@@ -211,10 +211,6 @@ public class WildPressureFilter extends FilterFramework{
 
                         if(wildJump) {
 
-//                            System.out.println(" :::::::::::::::           ::::::::::::::::");
-//                            System.out.println("WILD POINT DATA = " + wildPointsData);
-//                            System.out.println(" :::::::::::::::           ::::::::::::::::");
-
                             fw.write(wildPointsData);
                             fw.flush();
                             countingInWrite++;
@@ -259,15 +255,15 @@ public class WildPressureFilter extends FilterFramework{
                 }
 
             } // while
-
-            System.out.println(" :::::::::::::::           ::::::::::::::::");
-            System.out.println("Counting wild = " + countingWild);
-            System.out.println(" :::::::::::::::           ::::::::::::::::");
-
-            System.out.println(" :::::::::::::::           ::::::::::::::::");
-            System.out.println("Counting in Write = " + countingInWrite);
-            System.out.println(" :::::::::::::::           ::::::::::::::::");
-
+//
+//            System.out.println(" :::::::::::::::           ::::::::::::::::");
+//            System.out.println("Counting wild = " + countingWild);
+//            System.out.println(" :::::::::::::::           ::::::::::::::::");
+//
+//            System.out.println(" :::::::::::::::           ::::::::::::::::");
+//            System.out.println("Counting in Write = " + countingInWrite);
+//            System.out.println(" :::::::::::::::           ::::::::::::::::");
+//
 
         } // try
 
